@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة العمر الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        
+        * {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .celebrate {
+            animation: celebrate 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes celebrate {
+            0% {
+                transform: scale(1) rotate(-5deg);
+            }
+            100% {
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0.7;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .instagram-link {
+            color: #E4405F;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .instagram-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800 flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-6 space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-indigo-700">حاسبة العمر الذكية</h1>
+            <p class="text-gray-600 mt-2">احسب عمرك وتطلع على عمرك في أي سنة مستقبلية</p>
+        </div>
+        
+        <div class="text-center text-sm text-gray-500 mt-2">
+            <p>مصنوع بواسطة <span class="font-medium">Youssef Elsmeen</span></p>
+            <p>انستقرام: <a href="https://www.instagram.com/el_smeen/" target="_blank" rel="noopener noreferrer" class="instagram-link">el_smeen</a></p>
+        </div>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">تاريخ ميلادك</label>
+                <input type="date" id="birthDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">السنة الهدف (اختياري)</label>
+                <input type="number" id="targetYear" placeholder="أدخل سنة مستقبلية" min="2024" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            
+            <button id="calculateBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                احسب العمر
+            </button>
+        </div>
+        
+        <div id="result" class="hidden bg-gray-50 p-4 rounded-lg space-y-4">
+            <h2 class="text-xl font-semibold text-indigo-800 border-b pb-2">نتيجة الحساب</h2>
+            
+            <div id="currentAge" class="space-y-2">
+                <h3 class="font-medium text-gray-700">العمر الحالي:</h3>
+                <div class="flex justify-between text-lg">
+                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">0 years</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">0 months</span>
+                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full">0 days</span>
+                </div>
+            </div>
+            
+            <div id="targetAge" class="hidden space-y-2">
+                <h3 class="font-medium text-gray-700">العمر في السنة الهدف:</h3>
+                <div class="flex justify-between text-lg">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">0 years</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full">0 months</span>
+                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">0 days</span>
+                </div>
+                <p class="text-sm text-gray-600">في 1 يناير من السنة المحددة</p>
+            </div>
+            
+            <div id="birthdayAge" class="hidden space-y-2">
+                <h3 class="font-medium text-gray-700">العمر في عيد الميلاد:</h3>
+                <div class="flex justify-between text-lg">
+                    <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full">0 years</span>
+                    <span class="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full">0 months</span>
+                    <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full">0 days</span>
+                </div>
+                <p class="text-sm text-gray-600">في تاريخ ميلادك من السنة المحددة</p>
+            </div>
+        </div>
+        
+        <div id="celebration" class="hidden text-center py-6">
+            <div class="celebrate inline-block text-5xl mb-4">🎂</div>
+            <h2 class="text-2xl font-bold text-pink-600">عيد ميلاد سعيد! 🎉</h2>
+            <p class="text-gray-700 mt-2">كل عام وأنت بخير!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthDateInput = document.getElementById('birthDate');
+            const targetYearInput = document.getElementById('targetYear');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultDiv = document.getElementById('result');
+            const currentAgeDiv = document.getElementById('currentAge');
+            const targetAgeDiv = document.getElementById('targetAge');
+            const birthdayAgeDiv = document.getElementById('birthdayAge');
+            const celebrationDiv = document.getElementById('celebration');
+            
+            // تعيين التاريخ الأقصى لتاريخ اليوم
+            const today = new Date();
+            const maxDate = today.toISOString().split('T')[0];
+            birthDateInput.setAttribute('max', maxDate);
+            
+            // تعيين السنة الحالية كحد أدنى للسنة الهدف
+            targetYearInput.setAttribute('min', today.getFullYear());
+            
+            calculateBtn.addEventListener('click', function() {
+                const birthDate = new Date(birthDateInput.value);
+                const targetYear = parseInt(targetYearInput.value);
+                
+                // التحقق من إدخال تاريخ ميلاد صحيح
+                if (!birthDateInput.value) {
+                    alert('يرجى إدخال تاريخ الميلاد أولاً');
+                    return;
+                }
+                
+                // حساب العمر الحالي
+                const currentAge = calculateAge(birthDate, new Date());
+                
+                // عرض العمر الحالي
+                const currentAgeSpans = currentAgeDiv.querySelectorAll('span');
+                currentAgeSpans[0].textContent = `${currentAge.years} years`;
+                currentAgeSpans[1].textContent = `${currentAge.months} months`;
+                currentAgeSpans[2].textContent = `${currentAge.days} days`;
+                
+                // التحقق مما إذا كان اليوم عيد ميلاد
+                const isBirthday = isTodayBirthday(birthDate);
+                
+                if (isBirthday) {
+                    celebrationDiv.classList.remove('hidden');
+                    createConfetti();
+                } else {
+                    celebrationDiv.classList.add('hidden');
+                }
+                
+                // إذا تم إدخال سنة هدف، حساب العمر فيها
+                if (targetYear && !isNaN(targetYear)) {
+                    // حساب العمر في 1 يناير من السنة الهدف
+                    const targetDateJan = new Date(targetYear, 0, 1);
+                    const targetAgeJan = calculateAge(birthDate, targetDateJan);
+                    
+                    // حساب العمر في عيد الميلاد من السنة الهدف
+                    const birthdayDate = new Date(targetYear, birthDate.getMonth(), birthDate.getDate());
+                    const targetAgeBirthday = calculateAge(birthDate, birthdayDate);
+                    
+                    // عرض النتائج
+                    const targetAgeSpans = targetAge
